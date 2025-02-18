@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "outDir": "./dist",
+    "rootDir": "./backend/src",
+    "strict": true
+  },
+  "compilerOptions": {
+    "esModuleInterop": true
+  }
+}

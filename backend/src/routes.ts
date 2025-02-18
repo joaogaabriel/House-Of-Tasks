@@ -1,8 +1,14 @@
-import {FastifyInstance, FastifyPluginOptions, FastifyRequest, FastifyReply} from "fastify";
+import { Router } from "express";
+import { createUser, getUsers } from "./controllers/userController";
+import { createTask, getTasksByUser } from "./controllers/taskController";
+import { login } from "./controllers/authController";
 
-export async function routes(fastify: FastifyInstance, options: FastifyPluginOptions){
+const router = Router();
 
-    fastify.get("/teste", async(request: FastifyRequest, reply: FastifyReply) => { 
-        return {ok : true}
-    })
-}
+router.post("/users", createUser);
+router.get("/users", getUsers);
+router.post("/tasks", createTask);
+router.get("/tasks/:userId", getTasksByUser);
+router.post("/login", login);
+
+export default router;
