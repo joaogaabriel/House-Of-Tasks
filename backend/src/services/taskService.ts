@@ -8,7 +8,7 @@ export class TaskService {
     return task;
   }
 
-  etTasksByUser(userId: string): Task[] {
+  getTasksByUser(userId: string): Task[] {
     return this.tasks.filter((task) => task.userId === userId);
   }
 

@@ -1,0 +1,22 @@
+# Node Modules
+node_modules/
+
+# Arquivos de Build
+dist/
+build/
+
+# Variáveis de Ambiente
+.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Cache do Prisma
+prisma/dev.db
+prisma/dev.db-journal
+
+# Dependências locais
+.DS_Store
