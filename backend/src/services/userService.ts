@@ -1,18 +1,31 @@
-import { User } from "../models/userModel";
+import { PrismaClient, User } from "@prisma/client";
 
 export class UserService {
+  constructor(private readonly prisma: PrismaClient) {}
   private users: User[] = [];
 
-  createUser(user: User): User {
-    this.users.push(user);
-    return user;
+  async createUser(data: User): Promise<User | undefined> {
+    try {
+      const user = await this.prisma.user.create({ data });
+      return user;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   getAllUsers(): User[] {
     return this.users;
   }
 
-  getUserById(id: string): User | undefined {
-    return this.users.find((user) => user.id === id);
+  async getUserById(id: string): Promise<User | null> {
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { id },
+      });
+      return user;
+    } catch (err) {
+      console.error("Error fetching user by ID:", err);
+      return null;
+    }
   }
 }

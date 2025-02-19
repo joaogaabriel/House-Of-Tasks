@@ -2,10 +2,8 @@
   "compilerOptions": {
     "module": "CommonJS",
     "outDir": "./dist",
-    "rootDir": "./backend/src",
-    "strict": true
-  },
-  "compilerOptions": {
+    "strict": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true
   }
 }
