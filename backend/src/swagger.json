@@ -91,6 +91,35 @@
           }
         }
       }
+    },
+    "/tasks": {
+      "post": {
+        "summary": "cadastro de task",
+        "description": "essa rota cadastra um usuario",
+        "tags": ["Tasks"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Task"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -111,6 +140,28 @@
             "type": "string"
           }
         }
+      },
+      "Task": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "in-progress", "completed"]
+          },
+          "userId": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "title", "description", "status", "userId"]
       }
     }
   }

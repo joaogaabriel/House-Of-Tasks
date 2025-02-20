@@ -10,7 +10,6 @@ export const createUser = async (req: Request, res: Response) => {
   if (!id || !email || !password) {
     res.status(400).json({ message: "id, email e password são obrigatórios!" });
   }
-
   const newUser = await userService.createUser(req.body);
   res.status(201).json(newUser);
 };
