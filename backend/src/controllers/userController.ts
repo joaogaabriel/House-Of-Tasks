@@ -19,8 +19,11 @@ export const getUsers = (req: Request, res: Response) => {
 };
 
 export const getUserById = async (req: Request, res: Response) => {
+  //const userIdFromToken = req.body.user.id;
   const { id } = req.params;
-
+  /*if (userIdFromToken !== id) {
+    res.status(403).json({ message: "Acesso negado" });
+  }*/
   try {
     const user = await userService.getUserById(id);
 

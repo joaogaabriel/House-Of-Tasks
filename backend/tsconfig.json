@@ -4,6 +4,10 @@
     "outDir": "./dist",
     "strict": true,
     "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "typeRoots": ["src/@types", "node_modules/@types"],
+    "types": ["express"],
     "esModuleInterop": true
-  }
+  },
+  "include": ["src/**/*", "express.d.ts"]
 }

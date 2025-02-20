@@ -1,9 +1,12 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
-import { prisma } from "../../prisma/prisma.service";
+import { PrismaClient } from "@prisma/client";
+import { AuthService } from "../services/authService";
 
-const SECRET_KEY = "seuSegredoSuperSeguro";
+const SECRET_KEY = "batatinhafrita123";
+
+const prisma = new PrismaClient();
+const authService = new AuthService(prisma);
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -11,11 +14,12 @@ export const login = async (req: Request, res: Response) => {
     res.status(400).json({ message: "Email e senha são obrigatórios!" });
   }
 
-  const user = await prisma.user.findUnique({ where: { email } });
+  const user = await authService.loginUser(email, password);
 
-  if (!user || !(await bcrypt.compare(password, user.password))) {
+  if (!user) {
     res.status(401).json({ message: "Credenciais inválidas!" });
   }
+
   const token = jwt.sign(
     { id: req.body.id, email: req.body.email },
     SECRET_KEY,
@@ -24,5 +28,5 @@ export const login = async (req: Request, res: Response) => {
     }
   );
 
-  res.json({ token });
+  res.status(201).json({ token });
 };

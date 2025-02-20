@@ -1,6 +1,4 @@
-import { Request } from "express";
-
-declare module "express" {
+declare namespace Express {
   export interface Request {
     user?: {
       id: string;
@@ -8,3 +6,5 @@ declare module "express" {
     };
   }
 }
+
+export {};
