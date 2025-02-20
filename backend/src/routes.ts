@@ -6,7 +6,12 @@ import {
   updateUser,
   deleteUser
 } from "./controllers/userController";
-import { createTask, getTasksByUser } from "./controllers/taskController";
+import { 
+  createTask, 
+  getTasksByUser, 
+  updateTaskStatus, 
+  deleteTask
+} from "./controllers/taskController";
 import { login } from "./controllers/authController";
 
 const router = Router();
@@ -19,6 +24,8 @@ router.delete("/users/:id", deleteUser);
 
 router.post("/tasks", createTask);
 router.get("/tasks/:userId", getTasksByUser);
+router.patch("/tasks/:id", updateTaskStatus);
+router.delete("/tasks/:id", deleteTask);
 
 router.post("/login", login);
 
