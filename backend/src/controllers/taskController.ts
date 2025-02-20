@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { TaskService } from "../services/taskService";
 import { prisma } from "../../prisma/prisma.service";
 import { Status } from "@prisma/client";
 
