@@ -4,7 +4,7 @@ import {
   getUsers,
   getUserById,
 } from "./controllers/userController";
-import { createTask } from "./controllers/taskController";
+import { createTask, deleteTask, editTask } from "./controllers/taskController";
 import { login } from "./controllers/authController";
 import { checkToken } from "./middlewares/authMiddleware";
 
@@ -18,5 +18,7 @@ router.get("/users/:id", getUserById);
 router.get("/users/getUsers", getUsers);
 
 router.post("/tasks", checkToken, createTask);
+router.put("/tasks/:id", checkToken, editTask);
+router.delete("/tasks/:id", checkToken, deleteTask);
 
 export default router;
