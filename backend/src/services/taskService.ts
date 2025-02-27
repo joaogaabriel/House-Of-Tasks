@@ -22,11 +22,11 @@ export class TaskService {
     }
   }
 
-  getTasksByUser(userId: string): Task[] {
+  getTasksByUser(userId: number): Task[] {
     return this.tasks.filter((task) => task.userId === userId);
   }
 
-  updateTaskStatus(id: string, status: Status): Task | undefined {
+  updateTaskStatus(id: number, status: Status): Task | undefined {
     const task = this.tasks.find((task) => task.id === id);
     if (task) {
       task.status = status;
@@ -35,7 +35,7 @@ export class TaskService {
   }
 
   async editTask(
-    id: string,
+    id: number,
     data: Partial<Omit<Task, "id">>
   ): Promise<Task | undefined> {
     try {
@@ -57,7 +57,7 @@ export class TaskService {
     }
   }
 
-  async deleteTask(id: string): Promise<boolean> {
+  async deleteTask(id: number): Promise<boolean> {
     try {
       const existingTask = await this.prisma.task.findUnique({ where: { id } });
 

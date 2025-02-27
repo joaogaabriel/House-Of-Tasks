@@ -27,18 +27,14 @@ export const createTask = async (req: Request, res: Response) => {
 export const editTask = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { title, description } = req.body;
+    const { user, ...data } = req.body;
     if (!id) {
       res.status(400).json({ error: "ID da tarefa é obrigatório." });
     }
     const existingTask = await prisma.task.findUnique({
-      where: { id: id },
+      where: { id: +id },
     });
-    const updateTask = await taskService.editTask(id, req.body);
-    /*const updatedTask = await prisma.task.update({
-      where: { id: id },
-      data: { title, description },
-    });*/
+    const updateTask = await taskService.editTask(+id, data);
 
     res.json(updateTask);
   } catch (err) {
@@ -53,13 +49,13 @@ export const deleteTask = async (req: Request, res: Response) => {
       res.status(400).json({ error: "ID da tarefa é obrigatório." });
     }
     const existingTask = await prisma.task.findUnique({
-      where: { id: id },
+      where: { id: +id },
     });
 
     if (!existingTask) {
       res.status(404).json({ error: "Tarefa não encontrada." });
     }
-    await taskService.deleteTask(id);
+    await taskService.deleteTask(+id);
     /*await prisma.task.delete({
       where: { id: id },
     });*/

@@ -7,8 +7,8 @@ const userService = new UserService(prisma);
 export const createUser = async (req: Request, res: Response) => {
   const { id, name, email, password } = req.body;
 
-  if (!id || !email || !password) {
-    res.status(400).json({ message: "id, email e password são obrigatórios!" });
+  if (!email || !password) {
+    res.status(400).json({ message: "email e password são obrigatórios!" });
   }
   const newUser = await userService.createUser(req.body);
   res.status(201).json(newUser);
@@ -25,7 +25,7 @@ export const getUserById = async (req: Request, res: Response) => {
     res.status(403).json({ message: "Acesso negado" });
   }*/
   try {
-    const user = await userService.getUserById(id);
+    const user = await userService.getUserById(+id);
 
     if (!user) {
       res.status(404).json({ message: "Usuário não encontrado" });

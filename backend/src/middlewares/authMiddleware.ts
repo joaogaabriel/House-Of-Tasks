@@ -21,7 +21,7 @@ export const checkToken = (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY) as {
-      id: string;
+      id: number;
       email: string;
     };
 
