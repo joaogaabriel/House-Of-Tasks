@@ -1,21 +1,16 @@
-import Fastify from "fastify";
-import cors from "@fastify/cors";
-import { routes } from "./routes";
+import express, { Request, Response } from "express";
+import router from "./routes";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocs from "./swagger.json";
 
-const app = Fastify({ logger: true })
+const app = express();
 
-const start = async () => {
+app.use(express.json());
 
-    await app.register(cors);
-    await app.register(routes);
-    
-    try{
-        await app.listen({ port:3333})
+app.use("/home", router);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-    } catch(err){
-        process.exit(1)
-    }
-
-}
-
-start();
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});

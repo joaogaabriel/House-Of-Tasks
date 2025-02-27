@@ -1,0 +1,297 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API da lista de tarefas",
+    "description": "API para uma lista de tarefas ",
+    "termsOfService": "http://localhost/3000/terms",
+    "contact": {
+      "email": "jung.kook@ccc.ufcg.edu.br"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/home",
+      "description": "API de teste"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "summary": "cadastro de usuario",
+        "description": "Essa rota realiza a autenticação do usuário",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "email": "jung.kook@ccc.ufcg.edu.br",
+                    "password": "gabslindo"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Email e senha são obrigatórios!"
+          },
+          "401": {
+            "description": "Credenciais inválidas!"
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "summary": "cadastro de usuario",
+        "description": "essa rota cadastra um usuario",
+        "tags": ["Users"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "id": "BTS",
+                    "name": "Jungkook",
+                    "email": "jung.kook@ccc.ufcg.edu.br",
+                    "password": "gabslindo"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/users/{id}": {
+      "get": {
+        "description": "busca de um usuario por um id",
+        "summary": "busca de um usuario por um id",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id do usuario para busca",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
+    "/tasks": {
+      "post": {
+        "summary": "cadastro de task",
+        "description": "essa rota cadastra um usuario",
+        "tags": ["Tasks"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Task"
+              },
+              "examples": {
+                "task": {
+                  "value": {
+                    "id": "1",
+                    "title": "Aulas de piano",
+                    "description": "Aulas para aprender a tocar um isntrumento chamado piano",
+                    "status": "PENDING",
+                    "userId": "BTS"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Tarefa criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou não fornecido"
+          }
+        }
+      }
+    },
+    "/tasks/{id}": {
+      "put": {
+        "summary": "Editar uma tarefa",
+        "description": "Edita uma tarefa existente pelo ID",
+        "tags": ["Tasks"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string" },
+                  "description": { "type": "string" }
+                }
+              },
+              "examples": {
+                "updateTask": {
+                  "value": {
+                    "title": "Novo título",
+                    "description": "Nova descrição"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Tarefa atualizada com sucesso" },
+          "400": { "description": "ID da tarefa é obrigatório" },
+          "404": { "description": "Tarefa não encontrada" },
+          "500": { "description": "Erro ao editar tarefa" }
+        }
+      },
+      "delete": {
+        "summary": "Deletar uma tarefa",
+        "description": "Remove uma tarefa existente pelo ID",
+        "tags": ["Tasks"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Tarefa deletada com sucesso" },
+          "400": { "description": "ID da tarefa é obrigatório" },
+          "404": { "description": "Tarefa não encontrada" },
+          "500": { "description": "Erro ao deletar tarefa" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "Task": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "in-progress", "completed"]
+          },
+          "userId": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "title", "description", "status", "userId"]
+      }
+    }
+  }
+}
