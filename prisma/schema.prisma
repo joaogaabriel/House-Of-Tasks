@@ -2,18 +2,18 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id      Int      @id @default(autoincrement())
-  name     String  @unique
-  email    String  @unique
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  email    String    @unique
   password String
   tasks    Task[]
+  comments Comment[]
 }
 
 enum Status {
@@ -23,10 +23,39 @@ enum Status {
 }
 
 model Task {
-  id      Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String
   description String
-  status      Status  @default(PENDING)
+  status      Status    @default(PENDING)
   userId      Int
-  user        User    @relation(fields: [userId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
+  categoryId  Int?
+  category    Category? @relation(fields: [categoryId], references: [id])
+
+  tags     Tag[]     @relation("TaskTags")
+  comments Comment[] @relation("TaskComments")
+}
+
+model Category {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  tasks       Task[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  taskId    Int
+  userId    Int
+  createdAt DateTime @default(now())
+
+  task Task @relation(fields: [taskId], references: [id], name: "TaskComments")
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Tag {
+  id    Int    @id @default(autoincrement())
+  name  String
+  tasks Task[] @relation("TaskTags")
 }

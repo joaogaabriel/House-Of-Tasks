@@ -4,7 +4,14 @@ export class TaskService {
   constructor(private readonly prisma: PrismaClient) {}
   private tasks: Task[] = [];
 
-  async createTask(data: Task): Promise<Task | undefined> {
+  async createTask(data: {
+    title: string;
+    description: string;
+    status?: Status;
+    userId: number;
+    categoryId?: number;
+    tags?: number[];
+  }): Promise<Task | undefined> {
     try {
       const task = await this.prisma.task.create({
         data: {
@@ -14,11 +21,17 @@ export class TaskService {
           user: {
             connect: { id: data.userId },
           },
+          category: data.categoryId
+            ? { connect: { id: data.categoryId } }
+            : undefined,
+          tags: data.tags?.length
+            ? { connect: data.tags.map((tagId) => ({ id: tagId })) }
+            : undefined,
         },
       });
       return task;
     } catch (err) {
-      console.log(err);
+      console.error("Erro ao criar a task:", err);
     }
   }
 

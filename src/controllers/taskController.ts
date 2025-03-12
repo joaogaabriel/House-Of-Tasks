@@ -6,13 +6,20 @@ import { TaskService } from "../services/taskService";
 const taskService = new TaskService(prisma);
 export const createTask = async (req: Request, res: Response) => {
   try {
-    const { title, description, userId } = req.body;
+    const { title, description, status, userId, categoryId, tags } = req.body;
 
     if (!title || !description) {
       res.status(400).json({ message: "Título e descrição são obrigatórios!" });
       return;
     }
-    const newTask = await taskService.createTask(req.body);
+    const newTask = await taskService.createTask({
+      title,
+      description,
+      status: (status as Status) || "PENDING",
+      userId,
+      categoryId: categoryId || undefined,
+      tags: Array.isArray(tags) ? tags.map(Number) : undefined,
+    });
 
     res.status(201).json(newTask);
   } catch (error) {
