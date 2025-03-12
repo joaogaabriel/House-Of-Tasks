@@ -12,6 +12,7 @@ HOUSE OF TASKS is a powerful task management application where each user can for
 - **Task**: Missions that must be accomplished to keep the domain under control.
 - **Tag**: Special marks to categorize and quickly identify each task.
 - **Category**: Large domains under which tasks can be organized.
+- **comment**: The whispers and counsel shared , offering insight, updates, or reflections on a mission progress.
 
 
 ---
