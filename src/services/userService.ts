@@ -5,7 +5,11 @@ export class UserService {
   constructor(private readonly prisma: PrismaClient) {}
   private users: User[] = [];
 
-  async createUser(data: User): Promise<User | undefined> {
+  async createUser(data: {
+    name: string;
+    email: string;
+    password: string;
+  }): Promise<User | undefined> {
     const salt = await bcrypt.genSalt(12);
     const passwordHash = await bcrypt.hash(data.password, salt);
     data.password = passwordHash;
