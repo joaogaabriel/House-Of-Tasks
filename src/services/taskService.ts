@@ -87,4 +87,61 @@ export class TaskService {
       return false;
     }
   }
+  async addTagToTask(taskId: number, tagId: number): Promise<Task | undefined> {
+    try {
+      const existingTask = await this.prisma.task.findUnique({
+        where: { id: taskId },
+        include: { tags: true },
+      });
+
+      if (!existingTask) {
+        console.log("Tarefa não encontrada.");
+        return undefined;
+      }
+
+      const updatedTask = await this.prisma.task.update({
+        where: { id: taskId },
+        data: {
+          tags: {
+            connect: { id: tagId },
+          },
+        },
+        include: { tags: true },
+      });
+
+      return updatedTask;
+    } catch (err) {
+      console.error("Erro ao adicionar tag à tarefa:", err);
+    }
+  }
+  async removeTagFromTask(
+    taskId: number,
+    tagId: number
+  ): Promise<Task | undefined> {
+    try {
+      const existingTask = await this.prisma.task.findUnique({
+        where: { id: taskId },
+        include: { tags: true },
+      });
+
+      if (!existingTask) {
+        console.log("Tarefa não encontrada.");
+        return undefined;
+      }
+
+      const updatedTask = await this.prisma.task.update({
+        where: { id: taskId },
+        data: {
+          tags: {
+            disconnect: { id: tagId },
+          },
+        },
+        include: { tags: true },
+      });
+
+      return updatedTask;
+    } catch (err) {
+      console.error("Erro ao remover tag da tarefa:", err);
+    }
+  }
 }

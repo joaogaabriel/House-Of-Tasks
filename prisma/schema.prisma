@@ -13,6 +13,7 @@ model User {
   email    String    @unique
   password String
   tasks    Task[]
+  tags  Tag[]
   comments Comment[]
 }
 
@@ -55,7 +56,9 @@ model Comment {
 }
 
 model Tag {
-  id    Int    @id @default(autoincrement())
-  name  String
-  tasks Task[] @relation("TaskTags")
+  id     Int    @id @default(autoincrement())
+  name   String
+  userId Int
+  user   User   @relation(fields: [userId], references: [id])
+  tasks  Task[] @relation("TaskTags")
 }

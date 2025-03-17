@@ -4,21 +4,35 @@ import {
   getUsers,
   getUserById,
 } from "./controllers/userController";
-import { createTask, deleteTask, editTask } from "./controllers/taskController";
+import {
+  createTask,
+  deleteTask,
+  editTask,
+  addTagToTask,
+  removeTagFromTask,
+} from "./controllers/taskController";
 import { login } from "./controllers/authController";
 import { checkToken } from "./middlewares/authMiddleware";
+import { createTag, deleteTag, editTag } from "./controllers/tagController";
 
 const router = Router();
 
-router.post("/login", login);
+// Entidade User
+router.post("/login", login); // realizar login
+router.post("/users", createUser); // criar usuario
+router.get("/users/:id", getUserById); // retornar usuario
+router.get("/users/getUsers", getUsers); // retornar todos os usuarios
 
-router.post("/users", createUser);
-router.get("/users/:id", getUserById);
+// Entidade Task
+router.post("/tasks", checkToken, createTask); // criar Task
+router.put("/tasks/:id", checkToken, editTask); // modificar Task
+router.delete("/tasks/:id", checkToken, deleteTask); // deletar Task
+router.post("/tasks/:taskId/tags/:tagId", checkToken, addTagToTask); // adicionar Tag a Task
+router.delete("/tasks/:taskId/tags/:tagId", checkToken, removeTagFromTask); // remover Tag da Task
 
-router.get("/users/getUsers", getUsers);
-
-router.post("/tasks", checkToken, createTask);
-router.put("/tasks/:id", checkToken, editTask);
-router.delete("/tasks/:id", checkToken, deleteTask);
+// Entidade Tag
+router.post("/tag", checkToken, createTag); // criar Tag
+router.put("/tag/:id", checkToken, editTag); // editar Tag
+router.delete("/tag/:id", checkToken, deleteTag); // deletar Tag
 
 export default router;

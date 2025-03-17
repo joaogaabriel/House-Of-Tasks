@@ -11,7 +11,7 @@ export class TagService {
       const tag = await this.prisma.tag.create({
         data: {
           name: data.name,
-          id: data.id,
+          userId: data.id,
         },
       });
       return tag;
@@ -33,6 +33,28 @@ export class TagService {
     } catch (err) {
       console.log("Erro ao deletar tag:", err);
       return false;
+    }
+  }
+  async editTag(
+    id: number,
+    data: { name?: string; userId?: number }
+  ): Promise<Tag | undefined> {
+    try {
+      const existingTag = await this.prisma.tag.findUnique({ where: { id } });
+
+      if (!existingTag) {
+        console.log("Tag não encontrada.");
+        return undefined;
+      }
+
+      const updatedTag = await this.prisma.tag.update({
+        where: { id },
+        data,
+      });
+
+      return updatedTag;
+    } catch (err) {
+      console.log("Erro ao editar tag:", err);
     }
   }
 }
