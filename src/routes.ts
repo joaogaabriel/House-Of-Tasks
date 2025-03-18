@@ -14,6 +14,12 @@ import {
 import { login } from "./controllers/authController";
 import { checkToken } from "./middlewares/authMiddleware";
 import { createTag, deleteTag, editTag } from "./controllers/tagController";
+import {
+  createCategory,
+  deleteCategory,
+  getCategories,
+  updateCategory,
+} from "./controllers/categoryController";
 
 const router = Router();
 
@@ -34,5 +40,11 @@ router.delete("/tasks/:taskId/tags/:tagId", checkToken, removeTagFromTask); // r
 router.post("/tag", checkToken, createTag); // criar Tag
 router.put("/tag/:id", checkToken, editTag); // editar Tag
 router.delete("/tag/:id", checkToken, deleteTag); // deletar Tag
+
+// Entidade Category
+router.post("/category", checkToken, createCategory); // cria categoria
+router.get("/categories", checkToken, getCategories); // recupera categoria
+router.put("/category", checkToken, updateCategory); // edita categoria
+router.delete("/category/:id", checkToken, deleteCategory); // deleta categoria
 
 export default router;
