@@ -42,7 +42,7 @@ export const updateCategory = async (req: Request, res: Response) => {
     const { id, name, description } = req.body;
 
     if (!id || !name) {
-      return res
+      res
         .status(400)
         .json({ message: "ID e nome da categoria são obrigatórios!" });
     }
@@ -54,7 +54,7 @@ export const updateCategory = async (req: Request, res: Response) => {
     );
 
     if (!updatedCategory) {
-      return res.status(404).json({ message: "Categoria não encontrada" });
+      res.status(404).json({ message: "Categoria não encontrada" });
     }
 
     res.status(200).json(updatedCategory);
@@ -72,15 +72,13 @@ export const deleteCategory = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     if (!id) {
-      return res
-        .status(400)
-        .json({ message: "ID da categoria é obrigatório!" });
+      res.status(400).json({ message: "ID da categoria é obrigatório!" });
     }
 
     const deletedCategory = await categoryService.deleteCategory(Number(id));
 
     if (!deletedCategory) {
-      return res.status(404).json({ message: "Categoria não encontrada" });
+      res.status(404).json({ message: "Categoria não encontrada" });
     }
 
     res.status(200).json({ message: "Categoria excluída com sucesso" });
