@@ -39,10 +39,30 @@ export class TaskService {
     return this.tasks.filter((task) => task.userId === userId);
   }
 
+  getTaskById(id: number): Task[] {
+    return this.tasks.find((task) => task.id === id);
+  }
+
   updateTaskStatus(id: number, status: Status): Task | undefined {
     const task = this.tasks.find((task) => task.id === id);
     if (task) {
       task.status = status;
+    }
+    return task;
+  }
+
+  addComment(id: number, comment: {id: number, content: string, createdAt: Date}): Task | undefined {
+    const task = this.tasks.find((task) => task.id === id);
+    if (task) {
+      task.comments = [...task.comments, comment];
+    }
+    return task;
+  }
+
+  deleteComment(id: number, commentId: number): Task | undefined {
+    const task = this.tasks.find((task) => task.id === id);
+    if (task) {
+      task.comments = task.comments.filter(comment => comment.id !== commentId);
     }
     return task;
   }

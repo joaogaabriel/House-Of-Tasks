@@ -5,6 +5,7 @@ import {
   getUserById,
 } from "./controllers/userController";
 import {
+  getTasks,
   createTask,
   deleteTask,
   editTask,
@@ -30,6 +31,7 @@ router.get("/users/:id", getUserById); // retornar usuario
 router.get("/users/getUsers", getUsers); // retornar todos os usuarios
 
 // Entidade Task
+router.get("/tasks", checkToken, getTasks);
 router.post("/tasks", checkToken, createTask); // criar Task
 router.put("/tasks/:id", checkToken, editTask); // modificar Task
 router.delete("/tasks/:id", checkToken, deleteTask); // deletar Task

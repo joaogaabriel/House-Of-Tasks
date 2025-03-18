@@ -37,3 +37,37 @@ export const getUserById = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Erro interno do servidor" });
   }
 };
+
+export const createUser = async (req: Request, res: Response) => {
+  const { id, name, email, password } = req.body;
+
+  if (!id || !email || !password) {
+    res.status(400).json({ message: "id, email e password são obrigatórios!" });
+  }
+
+  const newUser = await userService.createUser(req.body);
+  res.status(201).json(newUser);
+};
+
+export const updateUser = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { name, email, password } = req.body;
+
+  if (!id || !email || !password) {
+    return res.status(400).json({ message: "id, email e password são obrigatórios!" });
+  }
+
+  const newUser = await userService.updateUser({ id, name, email, password });
+  res.status(200).json(newUser);
+};
+
+export const deleteUser = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ message: "id é obrigatório!" });
+  }
+
+  await userService.deleteUser(id);
+  res.status(204);
+};
