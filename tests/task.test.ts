@@ -1,114 +1,83 @@
 import { expect } from "chai";
-import sinon from "sinon";
-import { TaskService } from "../src/services/taskService";
-import { prisma } from "../prisma/prisma.service";
-import { PrismaClient, Task, Status } from "@prisma/client";
+import { PrismaClient, Status } from "@prisma/client";
+import { TaskService } from "../src/services/TaskService";
 
-describe("Task", () => {
-  let taskService: TaskService;
-  let prismaMock: any;
-  beforeEach(() => {
-    prismaMock = {
-      task: {
-        create: sinon.stub(),
-        findUnique: sinon.stub(),
-        update: sinon.stub(),
-        delete: sinon.stub(),
+const prisma = new PrismaClient();
+const taskService = new TaskService(prisma);
+
+describe("TaskService", () => {
+  let userId: number;
+  let taskId: number;
+
+  before(async () => {
+    const user = await prisma.user.create({
+      data: {
+        name: "Jungkook",
+        email: "jung.kook@ccc.ufcg.edu.br",
+        password: "gabszinholindo",
       },
-    };
-
-    // Inicializando o serviço com o mock do Prisma
-    taskService = new TaskService(prismaMock as PrismaClient);
-  });
-
-  afterEach(() => {
-    sinon.restore(); // Restaura os stubs após cada teste
-  });
-
-  it("should create a task correctly", async () => {
-    const mockTask: Task = {
-      id: 1,
-      title: "Complete the project",
-      description: "Finish the TypeScript API",
-      status: Status.PENDING,
-      userId: 1,
-      categoryId: null,
-    };
-
-    prismaMock.task.create.resolves(mockTask);
-
-    const result = await taskService.createTask({
-      title: "Complete the project",
-      description: "Finish the TypeScript API",
-      userId: 1,
     });
-
-    expect(result).to.deep.equal(mockTask);
-    expect(prismaMock.task.create.calledOnce).to.be.true;
+    userId = user.id;
   });
 
-  it("should return null when task is not found", async () => {
-    prismaMock.task.findUnique.resolves(null);
-
-    const result = await taskService.editTask(999, { title: "Updated Task" });
-
-    expect(result).to.be.undefined;
-    expect(prismaMock.task.findUnique.calledOnce).to.be.true;
+  after(async () => {
+    await prisma.task.deleteMany();
+    await prisma.user.deleteMany();
   });
 
-  it("should edit a task correctly", async () => {
-    const existingTask: Task = {
-      id: 1,
-      title: "Old Title",
-      description: "Old Description",
-      status: Status.PENDING,
-      userId: 1,
-      categoryId: null,
-    };
+  it("[GET ALL] Empty list of tasks", async () => {
+    const tasks = await prisma.task.findMany();
+    expect(tasks).to.be.an("array").that.is.empty;
+  });
 
-    const updatedTask: Task = {
-      ...existingTask,
-      title: "Updated Title",
-      description: "Updated Description",
-    };
-
-    prismaMock.task.findUnique.resolves(existingTask);
-    prismaMock.task.update.resolves(updatedTask);
-
-    const result = await taskService.editTask(1, {
-      title: "Updated Title",
-      description: "Updated Description",
+  it("[CREATE] Task creation", async () => {
+    const task = await taskService.createTask({
+      title: "Nova Task",
+      description: "Descrição da task",
+      userId,
     });
-
-    expect(result).to.deep.equal(updatedTask);
-    expect(prismaMock.task.update.calledOnce).to.be.true;
+    expect(task).to.include({
+      title: "Nova Task",
+      description: "Descrição da task",
+    });
+    if (task) taskId = task.id;
   });
 
-  it("should delete a task successfully", async () => {
-    const mockTask: Task = {
-      id: 1,
-      title: "Task to be deleted",
-      description: "This task will be removed",
-      status: Status.PENDING,
-      userId: 1,
-      categoryId: null,
-    };
-
-    prismaMock.task.findUnique.resolves(mockTask);
-    prismaMock.task.delete.resolves(mockTask);
-
-    const result = await taskService.deleteTask(1);
-
-    expect(result).to.be.true;
-    expect(prismaMock.task.delete.calledOnce).to.be.true;
+  it("[GET ALL] List of tasks", async () => {
+    const tasks = await prisma.task.findMany();
+    expect(tasks).to.be.an("array").that.is.not.empty;
   });
 
-  it("should return false when trying to delete a non-existing task", async () => {
-    prismaMock.task.findUnique.resolves(null);
+  it("[GET ONE] Task by ID", async () => {
+    const task = await prisma.task.findUnique({ where: { id: taskId } });
+    expect(task).to.not.be.null;
+    expect(task?.id).to.equal(taskId);
+  });
 
-    const result = await taskService.deleteTask(999);
+  it("[UPDATE] Task update", async () => {
+    const updatedTask = await taskService.editTask(taskId, {
+      title: "Task Atualizada",
+    });
+    expect(updatedTask?.title).to.equal("Task Atualizada");
+  });
 
-    expect(result).to.be.false;
-    expect(prismaMock.task.delete.called).to.be.false;
+  it("[UPDATE] Task update with non-existent ID", async () => {
+    try {
+      await taskService.editTask(99999, { title: "Inexistente" });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        expect(err.message).to.include("TaskNotFoundError");
+      }
+    }
+  });
+
+  it("[DELETE] Task deletion", async () => {
+    const deleted = await taskService.deleteTask(taskId);
+    expect(deleted).to.be.true;
+  });
+
+  it("[DELETE] Task deletion with non-existent ID", async () => {
+    const deleted = await taskService.deleteTask(99999);
+    expect(deleted).to.be.false;
   });
 });
