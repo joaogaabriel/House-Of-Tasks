@@ -35,24 +35,46 @@ export class CategoryService {
     description?: string
   ): Promise<Category | null> {
     try {
+      const existingCategory = await this.prisma.category.findUnique({
+        where: { id },
+      });
+
+      if (!existingCategory) {
+        throw new Error(
+          "Erro ao atualizar categoria: Categoria não encontrada."
+        );
+      }
       return await this.prisma.category.update({
         where: { id },
         data: { name, description },
       });
     } catch (err) {
-      console.error("Erro ao atualizar categoria:", err);
-      throw new Error("Erro ao atualizar categoria");
+      console.error(
+        "Erro ao atualizar categoria: Categoria não encontrada.",
+        err
+      );
+      throw new Error("Erro ao atualizar categoria: Categoria não encontrada.");
     }
   }
 
   async deleteCategory(id: number): Promise<Category | null> {
     try {
+      const existingCategory = await this.prisma.category.findUnique({
+        where: { id },
+      });
+
+      if (!existingCategory) {
+        throw new Error("Erro ao excluir categoria: Categoria não encontrada.");
+      }
       return await this.prisma.category.delete({
         where: { id },
       });
     } catch (err) {
-      console.error("Erro ao excluir categoria:", err);
-      throw new Error("Erro ao excluir categoria");
+      console.error(
+        "Erro ao excluir categoria: Categoria não encontrada.",
+        err
+      );
+      throw new Error("Erro ao excluir categoria: Categoria não encontrada.");
     }
   }
 }
