@@ -6,7 +6,7 @@
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "typeRoots": ["src/@types", "node_modules/@types"],
-    "types": ["express"],
+    "types": ["express", "mocha"],
     "esModuleInterop": true
   },
   "include": ["src/**/*", "express.d.ts"]

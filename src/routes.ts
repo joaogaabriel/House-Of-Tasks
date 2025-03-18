@@ -4,21 +4,49 @@ import {
   getUsers,
   getUserById,
 } from "./controllers/userController";
-import { getTasks, createTask, deleteTask, editTask } from "./controllers/taskController";
+import {
+  getTasks,
+  createTask,
+  deleteTask,
+  editTask,
+  addTagToTask,
+  removeTagFromTask,
+} from "./controllers/taskController";
 import { login } from "./controllers/authController";
 import { checkToken } from "./middlewares/authMiddleware";
+import { createTag, deleteTag, editTag } from "./controllers/tagController";
+import {
+  createCategory,
+  deleteCategory,
+  getCategories,
+  updateCategory,
+} from "./controllers/categoryController";
 
 const router = Router();
 
-router.post("/login", login);
+// Entidade User
+router.post("/login", login); // realizar login
+router.post("/users", createUser); // criar usuario
+router.get("/users/:id", getUserById); // retornar usuario
+router.get("/users/getUsers", getUsers); // retornar todos os usuarios
 
-router.get("/users", getUsers);
-router.get("/users/:id", getUserById);
-router.post("/users", createUser);
-
+// Entidade Task
 router.get("/tasks", checkToken, getTasks);
-router.post("/tasks", checkToken, createTask);
-router.put("/tasks/:id", checkToken, editTask);
-router.delete("/tasks/:id", checkToken, deleteTask);
+router.post("/tasks", checkToken, createTask); // criar Task
+router.put("/tasks/:id", checkToken, editTask); // modificar Task
+router.delete("/tasks/:id", checkToken, deleteTask); // deletar Task
+router.post("/tasks/:taskId/tags/:tagId", checkToken, addTagToTask); // adicionar Tag a Task
+router.delete("/tasks/:taskId/tags/:tagId", checkToken, removeTagFromTask); // remover Tag da Task
+
+// Entidade Tag
+router.post("/tag", checkToken, createTag); // criar Tag
+router.put("/tag/:id", checkToken, editTag); // editar Tag
+router.delete("/tag/:id", checkToken, deleteTag); // deletar Tag
+
+// Entidade Category
+router.post("/category", checkToken, createCategory); // cria categoria
+router.get("/categories", checkToken, getCategories); // recupera categoria
+router.put("/category", checkToken, updateCategory); // edita categoria
+router.delete("/category/:id", checkToken, deleteCategory); // deleta categoria
 
 export default router;

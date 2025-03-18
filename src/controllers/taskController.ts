@@ -119,3 +119,45 @@ export const addComment = async (req: Request, res: Response) => {
   }
 }
 
+};
+export const addTagToTask = async (req: Request, res: Response) => {
+  const { taskId, tagId } = req.params;
+
+  try {
+    const updatedTask = await prisma.task.update({
+      where: { id: Number(taskId) },
+      data: {
+        tags: {
+          connect: { id: Number(tagId) },
+        },
+      },
+      include: { tags: true },
+    });
+
+    res.status(200).json(updatedTask);
+  } catch (error) {
+    console.error("Erro ao adicionar tag à tarefa:", error);
+    res.status(500).json({ message: "Erro interno do servidor" });
+  }
+};
+
+export const removeTagFromTask = async (req: Request, res: Response) => {
+  const { taskId, tagId } = req.params;
+
+  try {
+    const updatedTask = await prisma.task.update({
+      where: { id: Number(taskId) },
+      data: {
+        tags: {
+          disconnect: { id: Number(tagId) },
+        },
+      },
+      include: { tags: true },
+    });
+
+    res.status(200).json(updatedTask);
+  } catch (error) {
+    console.error("Erro ao remover tag da tarefa:", error);
+    res.status(500).json({ message: "Erro interno do servidor" });
+  }
+};

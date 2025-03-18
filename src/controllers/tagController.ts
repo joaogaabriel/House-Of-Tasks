@@ -42,3 +42,58 @@ export const deleteTag = async (req: Request, res: Response) => {
     console.error("Erro ao deletar tag", err);
   }
 };
+
+export const editTag = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { user, ...data } = req.body;
+    if (!id) {
+      res.status(400).json({ error: "ID da tag é obrigatório." });
+    }
+    const existingTag = await prisma.tag.findUnique({
+      where: { id: +id },
+    });
+    const updateTask = await tagService.editTag(+id, data);
+
+    res.json(updateTask);
+  } catch (err) {
+    console.error("Erro ao editar tag:", err);
+  }
+};
+export const getTagsByUser = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      res.status(401).json({ message: "Usuário não autenticado" });
+    }
+
+    const tags = await prisma.tag.findMany({
+      where: { userId },
+    });
+
+    res.status(200).json(tags);
+  } catch (error) {
+    console.error("Erro ao buscar tags do usuário:", error);
+    res.status(500).json({ message: "Erro interno do servidor" });
+  }
+};
+
+export const getTagById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const tag = await prisma.tag.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!tag) {
+      return res.status(404).json({ message: "Tag não encontrada" });
+    }
+
+    res.status(200).json(tag);
+  } catch (error) {
+    console.error("Erro ao buscar tag:", error);
+    res.status(500).json({ message: "Erro interno do servidor" });
+  }
+};
