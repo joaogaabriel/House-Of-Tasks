@@ -1,32 +1,44 @@
 import { expect } from "chai";
+import { PrismaClient } from "@prisma/client";
 import { UserService } from "../src/services/userService";
-import { prisma } from "../prisma/prisma.service";
-import { PrismaClient, User } from "@prisma/client";
+import bcrypt from "bcrypt";
 
-describe("User", () => {
-  let user: UserService;
-  beforeEach(() => {
-    user = new UserService(prisma);
-  });
-  it("should create user correctly", async () => {
-    const mockUser: User = {
-      id: 1,
-      name: "Jon Snow",
-      email: "jon@snow.com",
-      password: "hashedpassword",
-    };
-    const result = await user.createUser(mockUser);
-    expect(result).to.equal(mockUser);
+describe("User Service", () => {
+  let prisma: PrismaClient;
+  let userService: UserService;
+  let userId: number;
+
+  before(async () => {
+    prisma = new PrismaClient();
+    userService = new UserService(prisma);
   });
 
-  it("should return a user when found", async () => {
-    const mockUser: User = {
-      id: 1,
-      name: "Arya Stark",
-      email: "arya@stark.com",
-      password: "somehash",
+  after(async () => {
+    await prisma.$disconnect();
+  });
+
+  it("[GET ALL] Empty list of users", async () => {
+    const users = userService.getAllUsers();
+    expect(users).to.be.an("array").that.is.empty;
+  });
+
+  it("[CREATE] User creation", async () => {
+    const userData = {
+      name: "Pennywise",
+      email: "ilovederry@wise.com",
+      password: "anitta",
     };
-    const result = await user.getUserById(1);
-    expect(result).to.equal(mockUser);
+
+    const user = await userService.createUser(userData);
+    expect(user).to.have.property("id");
+    expect(user?.name).to.equal(userData.name);
+    expect(user?.email).to.equal(userData.email);
+    userId = user!.id;
+  });
+
+  it("[GET ONE] User by ID", async () => {
+    const user = await userService.getUserById(userId);
+    expect(user).to.not.be.null;
+    expect(user?.id).to.equal(userId);
   });
 });
