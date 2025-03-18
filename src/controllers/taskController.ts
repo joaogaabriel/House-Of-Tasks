@@ -100,3 +100,22 @@ export const deleteTask = async (req: Request, res: Response) => {
     console.error('Erro ao deletar tarefa:', err)
   }
 }
+
+export const addComment = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const { user, ...data } = req.body
+    if (!id) {
+      res.status(400).json({ error: 'ID da tarefa é obrigatório.' })
+    }
+    const existingTask = await prisma.task.findUnique({
+      where: { id: +id }
+    })
+    const updateTask = await taskService.addComment(+id, data)
+
+    res.json(updateTask)
+  } catch (err) {
+    console.error('Erro ao adicionar comentario:', err)
+  }
+}
+
