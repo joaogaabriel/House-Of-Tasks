@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { prisma } from "../../prisma/prisma.service";
 import { CategoryService } from "../services/categoryService";
+import { PageOptionsDto } from "../pagination/page-options.dto";
+import { PageMetaDto } from "../pagination/page-meta.dto";
+import { PageDto } from "../pagination/page.dto";
 
 const categoryService = new CategoryService(prisma);
 
@@ -24,10 +27,22 @@ export const createCategory = async (req: Request, res: Response) => {
       .json({ message: "Erro ao criar categoria", error: errorMessage });
   }
 };
+
 export const getCategories = async (req: Request, res: Response) => {
   try {
-    const categories = await categoryService.getCategories();
-    res.status(200).json(categories);
+    const pageOptions = new PageOptionsDto(req.query);
+
+    const { entities, itemCount } = await categoryService.getCategories(
+      pageOptions
+    );
+
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto: pageOptions,
+      itemCount,
+    });
+
+    const page = new PageDto(entities, pageMetaDto);
+    res.status(200).json(page);
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Erro desconhecido";

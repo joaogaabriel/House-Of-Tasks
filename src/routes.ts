@@ -10,6 +10,7 @@ import {
   editTask,
   addTagToTask,
   removeTagFromTask,
+  getTasks,
 } from "./controllers/taskController";
 import { login } from "./controllers/authController";
 import { checkToken } from "./middlewares/authMiddleware";
@@ -31,6 +32,7 @@ router.get("/users/getUsers", getUsers); // retornar todos os usuarios
 
 // Entidade Task
 router.post("/tasks", checkToken, createTask); // criar Task
+router.get("/tasks", checkToken, getTasks); // recupera Tasks
 router.put("/tasks/:id", checkToken, editTask); // modificar Task
 router.delete("/tasks/:id", checkToken, deleteTask); // deletar Task
 router.post("/tasks/:taskId/tags/:tagId", checkToken, addTagToTask); // adicionar Tag a Task
@@ -43,7 +45,7 @@ router.delete("/tag/:id", checkToken, deleteTag); // deletar Tag
 
 // Entidade Category
 router.post("/category", checkToken, createCategory); // cria categoria
-router.get("/categories", checkToken, getCategories); // recupera categoria
+router.get("/categories", checkToken, getCategories); // recupera categorias
 router.put("/category", checkToken, updateCategory); // edita categoria
 router.delete("/category/:id", checkToken, deleteCategory); // deleta categoria
 

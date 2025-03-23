@@ -26,6 +26,7 @@ export const createTag = async (req: Request, res: Response) => {
       .json({ message: "Erro ao criar a tag", error: errorMessage });
   }
 };
+
 export const deleteTag = async (req: Request, res: Response) => {
   try {
     const { id } = req.body;
@@ -60,6 +61,7 @@ export const editTag = async (req: Request, res: Response) => {
     console.error("Erro ao editar tag:", err);
   }
 };
+
 export const getTagsByUser = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.id;

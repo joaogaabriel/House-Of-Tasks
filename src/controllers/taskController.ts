@@ -2,8 +2,12 @@ import { Request, Response } from "express";
 import { prisma } from "../../prisma/prisma.service";
 import { Status } from "@prisma/client";
 import { TaskService } from "../services/taskService";
+import { PageOptionsDto } from "../pagination/page-options.dto";
+import { PageMetaDto } from "../pagination/page-meta.dto";
+import { PageDto } from "../pagination/page.dto";
 
 const taskService = new TaskService(prisma);
+
 export const createTask = async (req: Request, res: Response) => {
   try {
     const { title, description, status, userId, categoryId, tags } = req.body;
@@ -16,7 +20,7 @@ export const createTask = async (req: Request, res: Response) => {
       title,
       description,
       status: (status as Status) || "PENDING",
-      userId,
+      userId: +userId,
       categoryId: categoryId || undefined,
       tags: Array.isArray(tags) ? tags.map(Number) : undefined,
     });
@@ -31,6 +35,29 @@ export const createTask = async (req: Request, res: Response) => {
       .json({ message: "Erro ao criar a tarefa", error: errorMessage });
   }
 };
+
+export const getTasks = async (req: Request, res: Response) => {
+  try {
+    const pageOptions = new PageOptionsDto(req.query);
+
+    const { entities, itemCount } = await taskService.getTasks(pageOptions);
+
+    const pageMetaDto = new PageMetaDto({
+      pageOptionsDto: pageOptions,
+      itemCount,
+    });
+
+    const page = new PageDto(entities, pageMetaDto);
+    res.status(200).json(page);
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Erro desconhecido";
+    res
+      .status(500)
+      .json({ message: "Erro ao buscar categorias", error: errorMessage });
+  }
+};
+
 export const editTask = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -71,6 +98,7 @@ export const deleteTask = async (req: Request, res: Response) => {
     console.error("Erro ao deletar tarefa:", err);
   }
 };
+
 export const addTagToTask = async (req: Request, res: Response) => {
   const { taskId, tagId } = req.params;
 

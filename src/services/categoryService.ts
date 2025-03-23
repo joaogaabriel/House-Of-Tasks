@@ -1,4 +1,5 @@
 import { PrismaClient, Category } from "@prisma/client";
+import { PageOptionsDto } from "../pagination/page-options.dto";
 
 export class CategoryService {
   constructor(private readonly prisma: PrismaClient) {}
@@ -20,9 +21,22 @@ export class CategoryService {
       console.error("Erro ao criar a categoria:", err);
     }
   }
-  async getCategories(): Promise<Category[]> {
+
+  async getCategories(pageOptionsDto: PageOptionsDto): Promise<{
+    entities: any;
+    itemCount: number;
+  }> {
     try {
-      return await this.prisma.category.findMany();
+      const { take, skip } = pageOptionsDto;
+      const entities = await this.prisma.category.findMany({
+        orderBy: [{ id: "asc" }],
+        skip: skip,
+        take: take,
+      });
+
+      const itemCount = await this.prisma.category.count({});
+
+      return { entities, itemCount };
     } catch (err) {
       console.error("Erro ao buscar categorias:", err);
       throw new Error("Erro ao buscar categorias");

@@ -1,4 +1,5 @@
 import { PrismaClient, Task, Status } from "@prisma/client";
+import { PageOptionsDto } from "../pagination/page-options.dto";
 
 export class TaskService {
   constructor(private readonly prisma: PrismaClient) {}
@@ -32,6 +33,28 @@ export class TaskService {
       return task;
     } catch (err) {
       console.error("Erro ao criar a task:", err);
+    }
+  }
+
+  async getTasks(pageOptionsDto: PageOptionsDto): Promise<{
+    entities: any;
+    itemCount: number;
+  }> {
+    try {
+      const { take, skip } = pageOptionsDto;
+
+      const entities = await this.prisma.task.findMany({
+        orderBy: [{ id: "asc" }],
+        skip: skip,
+        take: take,
+      });
+
+      const itemCount = await this.prisma.task.count({});
+
+      return { entities, itemCount };
+    } catch (err) {
+      console.error("Erro ao buscar tasks:", err);
+      throw new Error("Erro ao buscar tasks");
     }
   }
 
