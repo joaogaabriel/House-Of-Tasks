@@ -11,6 +11,8 @@ import {
   addTagToTask,
   removeTagFromTask,
   getTasks,
+  addCategoryToTask,
+  removeCategoryFromTask,
 } from "./controllers/taskController";
 import { login } from "./controllers/authController";
 import { checkToken } from "./middlewares/authMiddleware";
@@ -37,6 +39,16 @@ router.put("/tasks/:id", checkToken, editTask); // modificar Task
 router.delete("/tasks/:id", checkToken, deleteTask); // deletar Task
 router.post("/tasks/:taskId/tags/:tagId", checkToken, addTagToTask); // adicionar Tag a Task
 router.delete("/tasks/:taskId/tags/:tagId", checkToken, removeTagFromTask); // remover Tag da Task
+router.post(
+  "/tasks/:taskId/category/:categoryId",
+  checkToken,
+  addCategoryToTask
+); // adicionar categoria a tarefa
+router.delete(
+  "/tasks/:taskId/category/:categoryId",
+  checkToken,
+  removeCategoryFromTask
+); // remove categoria da tarefa
 
 // Entidade Tag
 router.post("/tag", checkToken, createTag); // criar Tag

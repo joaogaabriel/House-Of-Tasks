@@ -167,4 +167,64 @@ export class TaskService {
       console.error("Erro ao remover tag da tarefa:", err);
     }
   }
+  async addCategoryToTask(
+    taskId: number,
+    categoryId: number
+  ): Promise<Task | undefined> {
+    try {
+      const existingTask = await this.prisma.task.findUnique({
+        where: { id: taskId },
+        include: { category: true },
+      });
+
+      if (!existingTask) {
+        console.log("Tarefa não encontrada.");
+        return undefined;
+      }
+
+      const updatedTask = await this.prisma.task.update({
+        where: { id: categoryId },
+        data: {
+          category: {
+            connect: { id: categoryId },
+          },
+        },
+        include: { category: true },
+      });
+
+      return updatedTask;
+    } catch (err) {
+      console.error("Erro ao adicionar categoria à tarefa:", err);
+    }
+  }
+  async removeCategoryFromTask(
+    taskId: number,
+    categoryId: number
+  ): Promise<Task | undefined> {
+    try {
+      const existingTask = await this.prisma.task.findUnique({
+        where: { id: taskId },
+        include: { category: true },
+      });
+
+      if (!existingTask) {
+        console.log("Tarefa não encontrada.");
+        return undefined;
+      }
+
+      const updatedTask = await this.prisma.task.update({
+        where: { id: taskId },
+        data: {
+          category: {
+            disconnect: { id: categoryId },
+          },
+        },
+        include: { category: true },
+      });
+
+      return updatedTask;
+    } catch (err) {
+      console.error("Erro ao remover categoria da tarefa:", err);
+    }
+  }
 }

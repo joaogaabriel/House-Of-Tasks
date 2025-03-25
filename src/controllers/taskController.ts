@@ -140,3 +140,43 @@ export const removeTagFromTask = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Erro interno do servidor" });
   }
 };
+export const addCategoryToTask = async (req: Request, res: Response) => {
+  const { taskId, categoryId } = req.params;
+
+  try {
+    const updatedTask = await prisma.task.update({
+      where: { id: Number(taskId) },
+      data: {
+        category: {
+          connect: { id: Number(categoryId) },
+        },
+      },
+      include: { category: true },
+    });
+
+    res.status(200).json(updatedTask);
+  } catch (error) {
+    console.error("Erro ao adicionar categoria à tarefa:", error);
+    res.status(500).json({ message: "Erro interno do servidor" });
+  }
+};
+export const removeCategoryFromTask = async (req: Request, res: Response) => {
+  const { taskId, categoryId } = req.params;
+
+  try {
+    const updatedTask = await prisma.task.update({
+      where: { id: Number(taskId) },
+      data: {
+        category: {
+          disconnect: { id: Number(categoryId) },
+        },
+      },
+      include: { category: true },
+    });
+
+    res.status(200).json(updatedTask);
+  } catch (error) {
+    console.error("Erro ao remover categoria da tarefa:", error);
+    res.status(500).json({ message: "Erro interno do servidor" });
+  }
+};
