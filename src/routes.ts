@@ -58,7 +58,7 @@ router.delete("/tag/:id", checkToken, deleteTag); // deletar Tag
 // Entidade Category
 router.post("/category", checkToken, createCategory); // cria categoria
 router.get("/categories", checkToken, getCategories); // recupera categorias
-router.put("/category", checkToken, updateCategory); // edita categoria
+router.put("/category/:id", checkToken, updateCategory); // edita categoria
 router.delete("/category/:id", checkToken, deleteCategory); // deleta categoria
 
 export default router;

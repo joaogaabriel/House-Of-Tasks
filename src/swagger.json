@@ -204,38 +204,7 @@
           },
           "404": { "description": "Tarefa não encontrada" }
         }
-      }
-    },
-    "/tasks/user/{userId}": {
-      "get": {
-        "summary": "Buscar todas as tarefas de um usuário",
-        "description": "Retorna todas as tarefas associadas a um usuário específico.",
-        "tags": ["Tasks"],
-        "security": [{ "bearerAuth": [] }],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Lista de tarefas do usuário",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/Task" }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/tasks/{id}": {
+      },
       "put": {
         "summary": "Editar uma tarefa",
         "description": "Edita uma tarefa existente pelo ID",
@@ -298,7 +267,37 @@
         }
       }
     },
-    "/tasks/{id}/addTag/{tagId}": {
+    "/tasks/user/{userId}": {
+      "get": {
+        "summary": "Buscar todas as tarefas de um usuário",
+        "description": "Retorna todas as tarefas associadas a um usuário específico.",
+        "tags": ["Tasks"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de tarefas do usuário",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Task" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/tasks/{taskId}/tags/{tagId}": {
       "put": {
         "summary": "Adicionar uma tag a uma tarefa",
         "description": "Associa uma tag a uma tarefa existente.",
@@ -322,9 +321,7 @@
           "200": { "description": "Tag adicionada com sucesso" },
           "404": { "description": "Tarefa ou tag não encontrada" }
         }
-      }
-    },
-    "/tasks/{id}/removeTag/{tagId}": {
+      },
       "delete": {
         "summary": "Remover uma tag de uma tarefa",
         "description": "Desassocia uma tag de uma tarefa existente.",
@@ -347,6 +344,56 @@
         "responses": {
           "200": { "description": "Tag removida com sucesso" },
           "404": { "description": "Tarefa ou tag não encontrada" }
+        }
+      }
+    },
+    "/tasks/{taskId}/category/{categoryId}": {
+      "put": {
+        "summary": "Adicionar uma categoria a uma tarefa",
+        "description": "Associa uma categoria a uma tarefa existente.",
+        "tags": ["Tasks"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Categoria adicionada com sucesso" },
+          "404": { "description": "Tarefa ou categoria não encontrada" }
+        }
+      },
+      "delete": {
+        "summary": "Remover uma categoria de uma tarefa",
+        "description": "Desassocia uma categoria de uma tarefa existente.",
+        "tags": ["Tasks"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Categoria removida com sucesso" },
+          "404": { "description": "Tarefa ou categoria não encontrada" }
         }
       }
     },
@@ -429,26 +476,6 @@
             "description": "Category created successfully"
           }
         }
-      },
-      "put": {
-        "summary": "Update an existing category",
-        "tags": ["Category"],
-        "security": [{ "bearerAuth": [] }],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Category"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Category updated successfully"
-          }
-        }
       }
     },
     "/categories": {
@@ -491,6 +518,26 @@
         "responses": {
           "200": {
             "description": "Category deleted successfully"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an existing category",
+        "tags": ["Category"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category updated successfully"
           }
         }
       }

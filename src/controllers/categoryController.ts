@@ -54,7 +54,8 @@ export const getCategories = async (req: Request, res: Response) => {
 
 export const updateCategory = async (req: Request, res: Response) => {
   try {
-    const { id, name, description } = req.body;
+    const { id } = req.params;
+    const { name, description } = req.body;
 
     if (!id || !name) {
       res
@@ -63,7 +64,7 @@ export const updateCategory = async (req: Request, res: Response) => {
     }
 
     const updatedCategory = await categoryService.updateCategory(
-      id,
+      +id,
       name,
       description
     );
