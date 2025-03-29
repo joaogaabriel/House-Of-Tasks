@@ -38,9 +38,13 @@ export const createTask = async (req: Request, res: Response) => {
 
 export const getTasks = async (req: Request, res: Response) => {
   try {
+    const { id } = req.params;
     const pageOptions = new PageOptionsDto(req.query);
 
-    const { entities, itemCount } = await taskService.getTasks(pageOptions);
+    const { entities, itemCount } = await taskService.getTasks(
+      +id,
+      pageOptions
+    );
 
     const pageMetaDto = new PageMetaDto({
       pageOptionsDto: pageOptions,

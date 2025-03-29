@@ -9,13 +9,25 @@ const categoryService = new CategoryService(prisma);
 
 export const createCategory = async (req: Request, res: Response) => {
   try {
+    const user = req.user;
+
+    if (!user) {
+      res.status(403).json({ message: "Usuário não autenticado" });
+      return;
+    }
+
     const { name, description } = req.body;
 
     if (!name) {
       res.status(400).json({ message: "Nome da categoria é obrigatório!" });
       return;
     }
-    const newCategory = await categoryService.createCategory(name, description);
+
+    const newCategory = await categoryService.createCategory(
+      user.id,
+      name,
+      description
+    );
 
     res.status(201).json(newCategory);
   } catch (error) {

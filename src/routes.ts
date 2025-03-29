@@ -26,6 +26,10 @@ import {
 
 const router = Router();
 
+router.get("/hello", (req, res) => {
+  res.json({ message: "hello world" });
+});
+
 // Entidade User
 router.post("/login", login); // realizar login
 router.post("/users", createUser); // criar usuario
@@ -34,7 +38,7 @@ router.get("/users/getUsers", getUsers); // retornar todos os usuarios
 
 // Entidade Task
 router.post("/tasks", checkToken, createTask); // criar Task
-router.get("/tasks", checkToken, getTasks); // recupera Tasks
+router.get("/tasks/user/:id", checkToken, getTasks); // recupera Tasks
 router.put("/tasks/:id", checkToken, editTask); // modificar Task
 router.delete("/tasks/:id", checkToken, deleteTask); // deletar Task
 router.post("/tasks/:taskId/tags/:tagId", checkToken, addTagToTask); // adicionar Tag a Task
@@ -51,9 +55,9 @@ router.delete(
 ); // remove categoria da tarefa
 
 // Entidade Tag
-router.post("/tag", checkToken, createTag); // criar Tag
-router.put("/tag/:id", checkToken, editTag); // editar Tag
-router.delete("/tag/:id", checkToken, deleteTag); // deletar Tag
+router.post("/tags", checkToken, createTag); // criar Tag
+router.put("/tags/:id", checkToken, editTag); // editar Tag
+router.delete("/tags/:id", checkToken, deleteTag); // deletar Tag
 
 // Entidade Category
 router.post("/category", checkToken, createCategory); // cria categoria

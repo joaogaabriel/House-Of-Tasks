@@ -3,9 +3,9 @@ import { PageOptionsDto } from "../pagination/page-options.dto";
 
 export class CategoryService {
   constructor(private readonly prisma: PrismaClient) {}
-  private category: Category[] = [];
 
   async createCategory(
+    userId: number,
     name: string,
     description?: string
   ): Promise<Category | undefined> {
@@ -14,6 +14,9 @@ export class CategoryService {
         data: {
           name,
           description,
+          user: {
+            connect: { id: userId },
+          },
         },
       });
       return category;

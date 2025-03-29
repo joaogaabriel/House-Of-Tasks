@@ -7,15 +7,22 @@ const tagService = new TagService(prisma);
 
 export const createTag = async (req: Request, res: Response) => {
   try {
-    const { name, id } = req.body;
-    if (!name || !id) {
-      res.status(400).json({ message: "Nome e Id são obrigatórios" });
+    const user = req.user;
+
+    if (!user) {
+      res.status(403).json({ message: "Usuário não autenticado" });
       return;
     }
-    const newTag = await tagService.createTag({
-      name,
-      id,
-    });
+
+    const { title } = req.body;
+
+    if (!title) {
+      res.status(400).json({ message: "Title é obrigatório" });
+      return;
+    }
+
+    const newTag = await tagService.createTag(user.id, title);
+
     res.status(200).json(newTag);
   } catch (error) {
     const errorMessage =

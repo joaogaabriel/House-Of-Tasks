@@ -36,7 +36,10 @@ export class TaskService {
     }
   }
 
-  async getTasks(pageOptionsDto: PageOptionsDto): Promise<{
+  async getTasks(
+    userId: number,
+    pageOptionsDto: PageOptionsDto
+  ): Promise<{
     entities: any;
     itemCount: number;
   }> {
@@ -44,6 +47,7 @@ export class TaskService {
       const { take, skip } = pageOptionsDto;
 
       const entities = await this.prisma.task.findMany({
+        where: { userId: userId },
         orderBy: [{ id: "asc" }],
         skip: skip,
         take: take,
@@ -56,10 +60,6 @@ export class TaskService {
       console.error("Erro ao buscar tasks:", err);
       throw new Error("Erro ao buscar tasks");
     }
-  }
-
-  getTasksByUser(userId: number): Task[] {
-    return this.tasks.filter((task) => task.userId === userId);
   }
 
   updateTaskStatus(id: number, status: Status): Task | undefined {

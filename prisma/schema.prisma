@@ -8,13 +8,13 @@ datasource db {
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique
-  email    String    @unique
+  id       Int        @id @default(autoincrement())
+  name     String     @unique
+  email    String     @unique
   password String
   tasks    Task[]
   tags     Tag[]
-  comments Comment[]
+  Category Category[]
 }
 
 enum Status {
@@ -24,14 +24,15 @@ enum Status {
 }
 
 model Task {
-  id          Int       @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
   title       String
   description String
-  status      Status    @default(PENDING)
+  status      Status @default(PENDING)
   userId      Int
-  user        User      @relation(fields: [userId], references: [id])
-  categoryId  Int?
-  category    Category? @relation(fields: [categoryId], references: [id])
+  user        User   @relation(fields: [userId], references: [id])
+
+  categoryId Int?
+  category   Category? @relation(fields: [categoryId], references: [id])
 
   tags     Tag[]     @relation("TaskTags")
   comments Comment[] @relation("TaskComments")
@@ -41,18 +42,21 @@ model Category {
   id          Int     @id @default(autoincrement())
   name        String
   description String?
-  tasks       Task[]
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  tasks Task[]
 }
 
 model Comment {
-  id        Int      @id @default(autoincrement())
-  content   String
-  taskId    Int
-  userId    Int
+  id      Int    @id @default(autoincrement())
+  content String
+  taskId  Int
+
   createdAt DateTime @default(now())
 
   task Task @relation(fields: [taskId], references: [id], name: "TaskComments")
-  user User @relation(fields: [userId], references: [id])
 }
 
 model Tag {
@@ -60,5 +64,6 @@ model Tag {
   name   String
   userId Int
   user   User   @relation(fields: [userId], references: [id])
-  tasks  Task[] @relation("TaskTags")
+
+  tasks Task[] @relation("TaskTags")
 }

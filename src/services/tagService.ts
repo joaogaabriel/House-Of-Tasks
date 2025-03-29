@@ -2,16 +2,13 @@ import { PrismaClient, Tag, Status } from "@prisma/client";
 
 export class TagService {
   constructor(private readonly prisma: PrismaClient) {}
-  private tags: Tag[] = [];
-  async createTag(data: {
-    name: string;
-    id: number;
-  }): Promise<Tag | undefined> {
+
+  async createTag(userId: number, name: string): Promise<Tag | undefined> {
     try {
       const tag = await this.prisma.tag.create({
         data: {
-          name: data.name,
-          userId: data.id,
+          name: name,
+          user: { connect: { id: userId } },
         },
       });
       return tag;

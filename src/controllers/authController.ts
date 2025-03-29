@@ -10,6 +10,7 @@ const authService = new AuthService(prisma);
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
+
   if (!email || !password) {
     res.status(400).json({ message: "Email e senha são obrigatórios!" });
   }
@@ -18,15 +19,11 @@ export const login = async (req: Request, res: Response) => {
 
   if (!user) {
     res.status(401).json({ message: "Credenciais inválidas!" });
-  }
-
-  const token = jwt.sign(
-    { id: req.body.id, email: req.body.email },
-    SECRET_KEY,
-    {
+  } else {
+    const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, {
       expiresIn: "2h",
-    }
-  );
+    });
 
-  res.status(201).json({ token });
+    res.status(201).json({ token });
+  }
 };
