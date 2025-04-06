@@ -24,6 +24,13 @@ export const login = async (req: Request, res: Response) => {
       expiresIn: "2h",
     });
 
-    res.status(201).json({ token });
+    res.status(201).json({
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
+    });
   }
 };
