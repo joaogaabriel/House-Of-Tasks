@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 
 export class AuthService {
   constructor(private readonly prisma: PrismaClient) {}
-  private users: User[] = [];
 
   async loginUser(email: string, password: string): Promise<User | null> {
     try {

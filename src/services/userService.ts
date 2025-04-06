@@ -32,10 +32,6 @@ export class UserService {
     }
   }
 
-  getAllUsers(): User[] {
-    return this.users;
-  }
-
   async getUserById(id: number): Promise<User | null> {
     try {
       const user = await this.prisma.user.findUnique({

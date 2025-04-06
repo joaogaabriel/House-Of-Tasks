@@ -2,7 +2,6 @@ import { Router } from "express";
 import {
   createUser,
   getUserByEmail,
-  getUsers,
   getUserById,
   deleteUser,
   editUser,
@@ -33,7 +32,6 @@ const router = Router();
 router.post("/login", login); // realizar login
 router.post("/users", createUser); // criar usuario
 router.get("/users/:id", getUserById); // retornar usuario
-router.get("/users/getUsers", getUsers); // retornar todos os usuarios
 router.delete("/user/:id", deleteUser); // deleta um usuario
 router.put("user/:id", editUser);
 router.get("/users/email/:email", getUserByEmail);

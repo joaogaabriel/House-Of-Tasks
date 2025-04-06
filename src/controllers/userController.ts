@@ -14,10 +14,6 @@ export const createUser = async (req: Request, res: Response) => {
   res.status(201).json(newUser);
 };
 
-export const getUsers = (req: Request, res: Response) => {
-  res.json(userService.getAllUsers());
-};
-
 export const getUserById = async (req: Request, res: Response) => {
   const { id } = req.params;
 
