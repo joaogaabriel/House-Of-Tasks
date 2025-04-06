@@ -1,8 +1,11 @@
 import { Router } from "express";
 import {
   createUser,
+  getUserByEmail,
   getUsers,
   getUserById,
+  deleteUser,
+  editUser,
 } from "./controllers/userController";
 import {
   createTask,
@@ -26,15 +29,14 @@ import {
 
 const router = Router();
 
-router.get("/hello", (req, res) => {
-  res.json({ message: "hello world" });
-});
-
 // Entidade User
 router.post("/login", login); // realizar login
 router.post("/users", createUser); // criar usuario
 router.get("/users/:id", getUserById); // retornar usuario
 router.get("/users/getUsers", getUsers); // retornar todos os usuarios
+router.delete("/user/:id", deleteUser); // deleta um usuario
+router.put("user/:id", editUser);
+router.get("/users/email/:email", getUserByEmail);
 
 // Entidade Task
 router.post("/tasks", checkToken, createTask); // criar Task

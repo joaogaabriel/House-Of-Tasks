@@ -37,3 +37,52 @@ export const getUserById = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Erro interno do servidor" });
   }
 };
+
+export const getUserByEmail = async (req: Request, res: Response) => {
+  const { email } = req.params;
+
+  const user = await userService.getUserByEmail(email);
+  if (user) {
+    res.json(user);
+  }
+
+  res.status(404).json({ message: "Usuário não encontrado" });
+};
+export const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      res.status(400).json({ error: "ID do usuario é obrigatório." });
+    }
+    const existingUser = await prisma.user.findUnique({
+      where: { id: +id },
+    });
+
+    if (!existingUser) {
+      res.status(404).json({ error: "Usuario não encontrada." });
+    }
+    await userService.deleteUser(+id);
+
+    res.json({ message: "Usuario deletada com sucesso." });
+  } catch (err) {
+    console.error("Erro ao deletar usuario:", err);
+  }
+};
+
+export const editUser = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { user, ...data } = req.body;
+    if (!id) {
+      res.status(400).json({ error: "ID do usuario é obrigatório." });
+    }
+    const existingUser = await prisma.user.findUnique({
+      where: { id: +id },
+    });
+    const updateUser = await userService.editUser(+id, data);
+
+    res.json(updateUser);
+  } catch (err) {
+    console.error("Erro ao editar usuario:", err);
+  }
+};
