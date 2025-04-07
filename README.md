@@ -16,6 +16,22 @@ HOUSE OF TASKS is a powerful task management application where each user can for
 
 
 ---
+HOW TO RUN APPLICATION
+First, ensure that you have Docker Desktop installed.
+If necessary, pull any db to Docker, but it shouldn't be necessary.
+Run Docker before doing anything, it is essential that Docker is composed.
+Run the docker command docker-compose up -d, other commands should not work as well.
+Now, download the backend from the following link (https://github.com/joaogaabriel/House-Of-Tasks)
+With docker running, open the backend folder and run nmp run start
+Wait for gulp to compile and run the backend successfully.
+Now, download the frontend from the following link (https://github.com/joaogaabriel/House-Of-Tasks---Frontend)
+With the backend running, open the frontend folder and run nmp run dev
+Wait for vite to compile and run the frontend successfully.
+By the end of this you should be able to use both backend and frontend.
 
+Backend is running on http://localhost:3000.
+Frontend is runing on http://localhost:4200.
+---
 **🔥"Winter is coming, but your deadlines are closer. Get organized before it's too late!"🔥**
+
 
