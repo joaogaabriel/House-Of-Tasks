@@ -16,7 +16,7 @@ HOUSE OF TASKS is a powerful task management application where each user can for
 
 
 ---
-HOW TO RUN APPLICATION
+## **HOW TO RUN APPLICATION**
 First, ensure that you have Docker Desktop installed.
 If necessary, pull any db to Docker, but it shouldn't be necessary.
 Run Docker before doing anything, it is essential that Docker is composed.
