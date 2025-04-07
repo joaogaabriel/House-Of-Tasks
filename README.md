@@ -29,8 +29,8 @@ With the backend running, open the frontend folder and run nmp run dev
 Wait for vite to compile and run the frontend successfully.
 By the end of this you should be able to use both backend and frontend.
 
-Backend is running on http://localhost:3000.
-Frontend is runing on http://localhost:4200.
+Backend is running on http://localhost:3000.  
+Frontend is running on http://localhost:4200.
 ---
 **🔥"Winter is coming, but your deadlines are closer. Get organized before it's too late!"🔥**
 
