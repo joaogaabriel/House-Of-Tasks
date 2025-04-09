@@ -1,20 +1,19 @@
 services:
   database:
-    image: mysql:8.0
-    container_name: gabs_database
+    image: postgres:alpine
+    container_name: hot_dev
     restart: unless-stopped
     ports:
-      - "${DB_PORT}:3306"
+      - "${DB_PORT}:5432"
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${DB_NAME}
-      - MYSQL_USER=${DB_USERNAME}
-      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
     env_file:
       - "./.env"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - pgdata:/data/postgres
 
 volumes:
-  mysql_data:
+  pgdata:
     driver: local

@@ -18,7 +18,7 @@ import {
 } from "./controllers/taskController";
 import { login } from "./controllers/authController";
 import { checkToken } from "./middlewares/authMiddleware";
-import { createTag, deleteTag, editTag } from "./controllers/tagController";
+import { createTag, deleteTag, editTag, getTagsByUser } from "./controllers/tagController";
 import {
   createCategory,
   deleteCategory,
@@ -58,6 +58,7 @@ router.delete(
 router.post("/tags", checkToken, createTag); // criar Tag
 router.put("/tags/:id", checkToken, editTag); // editar Tag
 router.delete("/tags/:id", checkToken, deleteTag); // deletar Tag
+router.get("/tags", checkToken, getTagsByUser); // recupera Tags
 
 // Entidade Category
 router.post("/category", checkToken, createCategory); // cria categoria
